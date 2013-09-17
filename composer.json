@@ -1,5 +1,6 @@
 {
     "require": {
-        "zendframework/zendframework1": "*"
+        "zendframework/zendframework1": "*",
+        "twig/twig": "*"
     }
 }
