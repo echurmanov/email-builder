@@ -1,3 +1,5 @@
+configs/application.php
+var/cache/twig/*
 .idea
 vendor
 composer.phar
