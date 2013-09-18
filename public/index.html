@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Конструктор письма</title>
+        <meta charset="utf-8"/>
+        <link href="assets/css/bootstrap.css" rel="stylesheet">
+        <script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+<style>
+
+
+</style>
+        <script>
+            function addItem() {
+                var formData = new FormData($('#itemData')[0]);
+                $.ajax({
+                    url: 'add-item.php',  //Server script to process data
+                    type: 'POST',
+                    xhr: function() {  // Custom XMLHttpRequest
+                        var myXhr = $.ajaxSettings.xhr();
+                        if(myXhr.upload){ // Check if upload property exists
+                            myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+                        }
+                        return myXhr;
+                    },
+                    //Ajax events
+
+                    success: function(response){
+                        console.log("success");
+                        console.log(response);
+                        $('#itemData')[0].reset();
+
+                        $("#posts")[0].innerHTML = '';
+                        for (var i in response.items) {
+                            var item = response.items[i];
+                            var trHtml = "<tr><td>"+item.date+"</td><td><h2 style='color: #df8505; font-size: 16px;'>"+
+                                    item.title
+                                    +"</h2><img src='image.php?image="+item.imageIndex+"' width='" + item.imageWidth
+                                    + "' width='" + item.imageHeight + "'/><p>" +
+                                    item.text
+                                    +"</p><a href='"+item.link+"' target='_blank'>Читать дальше</a></td></tr>";
+                            $("#posts")[0].innerHTML += trHtml;
+                        }
+
+                    },
+                    error: function(p1,p2){
+                        console.log("Error");
+                        console.log(p1);
+                        console.log(p2);
+
+                    },
+                    // Form data
+                    data: formData,
+                    //Options to tell jQuery not to process data or worry about content-type.
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            }
+
+            function progressHandlingFunction(e){
+                if(e.lengthComputable){
+                    $('progress').attr({value:e.loaded,max:e.total});
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+
+        <div class="span12">
+            <h5>Добавить элемент</h5>
+            <hr/>
+            <div id="control">
+                <div class="form-horizontal">
+                    <form id="itemData">
+                    <div class="control-group">
+                        <lable class="control-label" for="header">Заголовок</lable>
+                        <div class="controls">
+                            <input type="text" name="header" id="header" class="input-xxlarge"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <lable class="control-label" for="date">Дата</lable>
+                        <div class="controls">
+                            <input type="text" name="date" id="date" class="input-medium"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <lable class="control-label" for="link">Ссылка</lable>
+                        <div class="controls">
+                            <input type="text" name="link" id="link" class="input-xxlarge"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <lable class="control-label" for="image">Изображение</lable>
+                        <div class="controls">
+                            <input type="file" id="image" name="image"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <lable class="control-label" for="text">Текст</lable>
+                        <div class="controls">
+                            <textarea id="text" name="text" rows="5" class="input-xxlarge"></textarea>
+                        </div>
+                    </div>
+                    </form>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="addItem()">Добавить элемент</button>
+                            <progress></progress>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $('progress').attr({value:0, max: 100});
+            </script>
+            <hr/>
+            <h5>Предпросмотр</h5>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                <hr/>
+                <div id="preview">
+                    <table>
+                        <tr>
+                            <td>Шапка</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table id="posts">
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
