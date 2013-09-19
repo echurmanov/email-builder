@@ -90,6 +90,10 @@ if (isset($_FILES['image'])) {
             $_SESSION['blockId']++;
             $imageData = null;
             if ($_FILES['image']['error'] == 0) {
+                if ($_REQUEST['type'] == 'banner') {
+                    $maxImageWidth = 800;
+                    $maxImageHeight = 100;
+                }
                 $imageData = array(
                     'size' => $_FILES['image']['size'],
                     'type' => $_FILES['image']['type'],
