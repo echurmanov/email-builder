@@ -92,7 +92,7 @@ if (isset($_FILES['image'])) {
             if ($_FILES['image']['error'] == 0) {
                 if ($_REQUEST['type'] == 'banner') {
                     $maxImageWidth = 800;
-                    $maxImageHeight = 100;
+                    $maxImageHeight = 1000;
                 }
                 $imageData = array(
                     'size' => $_FILES['image']['size'],
