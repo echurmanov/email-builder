@@ -85,27 +85,32 @@ $result = array(
 
 if (isset($_FILES['image'])) {
     if ($_FILES['image']['error'] == 0) {
-        $_SESSION['blockId'] ++;
-        $imageData = array(
-            'size' => $_FILES['image']['size'],
-            'type' => $_FILES['image']['type'],
-            'image' => resizeImage($_FILES['image']['tmp_name'], $_FILES['image']['type'], $maxImageWidth, $maxImageHeight),
-        );
-        $_SESSION['images'][$_SESSION['blockId']] = $imageData;
-        $itemData = array(
-            'title' => $_REQUEST['header'],
-            'link' => $_REQUEST['link'],
-            'text' => $_REQUEST['text'],
-            'date' => $_REQUEST['date'],
-            'imageIndex' => $_SESSION['blockId'],
-            'imageWidth' => $imageData['image']['width'],
-            'imageHeight' => $imageData['image']['height'],
-        );
-        $_SESSION['items'][$_SESSION['blockId']] = $itemData;
-        $result = array(
-            'success' => true,
-            'items' => $_SESSION['items'],
-        );
+        try {
+            $_SESSION['blockId'] ++;
+            $imageData = array(
+                'size' => $_FILES['image']['size'],
+                'type' => $_FILES['image']['type'],
+                'image' => resizeImage($_FILES['image']['tmp_name'], $_FILES['image']['type'], $maxImageWidth, $maxImageHeight),
+            );
+            $_SESSION['images'][$_SESSION['blockId']] = $imageData;
+            $itemData = array(
+                'title' => $_REQUEST['header'],
+                'link' => $_REQUEST['link'],
+                'text' => $_REQUEST['text'],
+                'date' => $_REQUEST['date'],
+                'imageIndex' => $_SESSION['blockId'],
+                'imageWidth' => $imageData['image']['width'],
+                'imageHeight' => $imageData['image']['height'],
+            );
+            $_SESSION['items'][$_SESSION['blockId']] = $itemData;
+            $result = array(
+                'success' => true,
+                'items' => $_SESSION['items'],
+            );
+        } catch (Exception $e) {
+            $result['success'] = false;
+            $result['message'] = 'FILE_PROCESS_ERROR';
+        }
     } else {
         $result['success'] = false;
         $result['message'] = 'FILE_UPLOAD_ERROR';

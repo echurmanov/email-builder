@@ -11,8 +11,16 @@
 
 </style>
         <script>
-            function addItem() {
-                var formData = new FormData($('#itemData')[0]);
+
+            var CONST = {
+                MESSAGES: {
+                    FILE_UPLOAD_ERROR: "Ошибка загрузки файла",
+                    FILE_PROCESS_ERROR: "Ошибка обработки файла"
+                }
+            };
+
+            function addItem(form) {
+                var formData = new FormData($('#' + form)[0]);
                 $.ajax({
                     url: 'add-item.php',  //Server script to process data
                     type: 'POST',
@@ -26,9 +34,13 @@
                     //Ajax events
 
                     success: function(response){
-                        console.log("success");
-                        console.log(response);
+                        if (response.success == false) {
+                            alert(CONST.MESSAGES[response.message]);
+                            return;
+                        }
                         $('#itemData')[0].reset();
+
+                        $('progress').attr({value:100, max: 100});
 
                         $("#posts")[0].innerHTML = '';
                         for (var i in response.items) {
@@ -41,6 +53,8 @@
                                     +"</p><a href='"+item.link+"' target='_blank'>Читать дальше</a></td></tr>";
                             $("#posts")[0].innerHTML += trHtml;
                         }
+
+
 
                     },
                     error: function(p1,p2){
@@ -57,6 +71,8 @@
                     processData: false
                 });
             }
+
+
 
             function progressHandlingFunction(e){
                 if(e.lengthComputable){
@@ -119,7 +135,7 @@
                             </form>
                             <div class="control-group">
                                 <div class="controls">
-                                    <button class="btn btn-primary" onclick="addItem()">Добавить элемент</button>
+                                    <button class="btn btn-primary" onclick="addItem('itemData')">Добавить элемент</button>
                                     <progress></progress>
                                 </div>
                             </div>
@@ -146,7 +162,8 @@
                         </form>
                         <div class="control-group">
                             <div class="controls">
-                                <button class="btn btn-primary" onclick="addBanner()">Добавить элемент</button>
+                                <button class="btn btn-primary" onclick="addItem('bannerData')">Добавить элемент</button>
+                                <progress></progress>
                             </div>
                         </div>
                     </div>
