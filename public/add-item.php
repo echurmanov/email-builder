@@ -84,24 +84,32 @@ $result = array(
 );
 
 if (isset($_FILES['image'])) {
-    if ($_FILES['image']['error'] == 0) {
+    error_log($_FILES['image']['error']);
+    if ($_FILES['image']['error'] == 0 || $_FILES['image']['error'] == 4) {
         try {
-            $_SESSION['blockId'] ++;
-            $imageData = array(
-                'size' => $_FILES['image']['size'],
-                'type' => $_FILES['image']['type'],
-                'image' => resizeImage($_FILES['image']['tmp_name'], $_FILES['image']['type'], $maxImageWidth, $maxImageHeight),
-            );
-            $_SESSION['images'][$_SESSION['blockId']] = $imageData;
+            $_SESSION['blockId']++;
+            $imageData = null;
+            if ($_FILES['image']['error'] == 0) {
+                $imageData = array(
+                    'size' => $_FILES['image']['size'],
+                    'type' => $_FILES['image']['type'],
+                    'image' => resizeImage($_FILES['image']['tmp_name'], $_FILES['image']['type'], $maxImageWidth, $maxImageHeight),
+                );
+                $_SESSION['images'][$_SESSION['blockId']] = $imageData;
+            }
             $itemData = array(
                 'title' => $_REQUEST['header'],
                 'link' => $_REQUEST['link'],
                 'text' => $_REQUEST['text'],
                 'date' => $_REQUEST['date'],
-                'imageIndex' => $_SESSION['blockId'],
-                'imageWidth' => $imageData['image']['width'],
-                'imageHeight' => $imageData['image']['height'],
+                'type' => $_REQUEST['type'],
             );
+            if ($imageData) {
+
+                $itemData['imageIndex'] = $_SESSION['blockId'];
+                $itemData['imageWidth'] = $imageData['image']['width'];
+                $itemData['imageHeight'] = $imageData['image']['height'];
+            }
             $_SESSION['items'][$_SESSION['blockId']] = $itemData;
             $result = array(
                 'success' => true,

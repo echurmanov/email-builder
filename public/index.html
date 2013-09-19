@@ -45,12 +45,22 @@
                         $("#posts")[0].innerHTML = '';
                         for (var i in response.items) {
                             var item = response.items[i];
-                            var trHtml = "<tr><td>"+item.date+"</td><td><h2 style='color: #df8505; font-size: 16px;'>"+
-                                    item.title
-                                    +"</h2><img src='image.php?image="+item.imageIndex+"' width='" + item.imageWidth
-                                    + "' width='" + item.imageHeight + "'/><p>" +
-                                    item.text
-                                    +"</p><a href='"+item.link+"' target='_blank'>Читать дальше</a></td></tr>";
+                            var trHtml = '';
+                            if (item.type == 'announce') {
+                                trHtml = "<tr><td>"+item.date+"</td><td><h2 style='color: #df8505; font-size: 16px;'>"+
+                                        item.title
+                                        +"</h2>";
+                                if (typeof item.imageIndex !== 'undefined') {
+                                    trHtml += "<img style='float: left; padding-right: 10px; padding-bottom: 5px;' src='image.php?image="+item.imageIndex+"' width='" + item.imageWidth
+                                            + "' width='" + item.imageHeight + "'/>";
+                                }
+                                trHtml += "<p>" + item.text
+                                        +"</p><a href='"+item.link+"' target='_blank'>Читать дальше</a></td></tr>";
+                            } else if (item.type == 'banner') {
+                                trHtml = "<tr><td colspan='2' style='text-align: center;'><a href='"+item.link
+                                        +"' target='_blank'><img src='image.php?image="+item.imageIndex+"' width='" + item.imageWidth
+                                        + "' width='" + item.imageHeight + "'/></a></td></tr>";
+                            }
                             $("#posts")[0].innerHTML += trHtml;
                         }
 
@@ -188,7 +198,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table id="posts">
+                                <table id="posts" width="800">
                                 </table>
                             </td>
                         </tr>
