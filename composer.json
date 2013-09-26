@@ -1,6 +1,5 @@
 {
     "require": {
-        "zendframework/zendframework1": "*",
-        "twig/twig": "*"
+        "phpmailer/phpmailer": "*"
     }
 }

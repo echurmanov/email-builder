@@ -171,8 +171,16 @@ include_once '_functions.php';
             </script>
             <hr/>
             <h5>Предпросмотр</h5>
+            <div class="control-group">
+                <div class="controls">
             <a class="btn btn-success" target="_blank" href="view.php">Смотреть отдельно</a>
-            <a class="btn btn-danger" href="javascript:void(0)" onclick="$.ajax({url: 'clear.php'});$('#preview').html('');">Очистить</a>
+            <a class="btn btn-danger" href="javascript:void(0)" onclick="$.ajax({url: 'clear.php'});$('#preview').html('');">Очистить</a> <br/>
+            </div></div>
+            <div class="control-group">
+            <div class="controls">
+                <input id="to" class="input-medium"/> <button class="btn btn-warning" onclick="$.ajax({url: 'test-send.php?to=' + $('#to').val()});">Отправить письмо</button>
+            </div>
+                </div>
         </div>
 
         <div class="row">
