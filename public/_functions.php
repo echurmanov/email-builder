@@ -25,10 +25,12 @@ function getHtmlSendCode($startCid)
 HTML;
 
     foreach ($_SESSION['items'] as $index => $itemData) {
+        $imageCid = $index + $startCid;
         if ($itemData['type'] != 'banner') {
             $date = $itemData['date'];
             $date = explode('.', $date);
-            $imageCid = $index + $startCid;
+
+
             $html .= <<<HTML
     <tr>
             <td width="220" style="background-image: url(cid:100002);
